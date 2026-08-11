@@ -69,8 +69,6 @@ The interface automatically adjusts to different screen sizes.
 son-cars-game/
 │
 ├── index.html
-├── highway-racer.html
-├── coin-rush.html
 └── README.md
 ```
 
