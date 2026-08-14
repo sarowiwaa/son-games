@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -1408,6 +1407,164 @@ body{
 
 }
 
+
+/* =========================================================
+   SON CARS GAME - TRAFFIC & GRAPHICS UPGRADE
+========================================================= */
+
+/* More room for the player to read the road and change lanes. */
+.road{
+    background:
+        linear-gradient(90deg,
+            #181818 0 5px,
+            #303030 5px 8px,
+            #262626 8px 50%,
+            #303030 calc(100% - 8px),
+            #181818 calc(100% - 5px)
+        );
+    border-left:8px solid #f4f4f4;
+    border-right:8px solid #f4f4f4;
+}
+
+.road::before,
+.road::after{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:4px;
+    pointer-events:none;
+    z-index:2;
+}
+
+.road::before{ left:12px; background:linear-gradient(#ffffff55,#ffffff11); }
+.road::after{ right:12px; background:linear-gradient(#ffffff55,#ffffff11); }
+
+.lane-line{
+    width:6px;
+    height:96px;
+    border-radius:3px;
+    background:linear-gradient(#fff,#d7d7d7 55%,#999);
+    box-shadow:0 0 7px rgba(255,255,255,.42), 0 2px 5px rgba(0,0,0,.5);
+    z-index:3;
+}
+
+/* Bigger, cleaner player car. */
+.game-car{
+    width:66px;
+    height:130px;
+    transform:scale(1.14);
+    transform-origin:center bottom;
+    filter:drop-shadow(0 17px 13px rgba(0,0,0,.78));
+}
+
+.game-car .car-body{
+    background:
+        linear-gradient(90deg,#3b0008 0%,#b40020 15%,#ff173d 34%,#ff7184 50%,#e80029 68%,#920016 87%,#2d0006 100%);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:
+        inset 7px 0 9px rgba(255,255,255,.18),
+        inset -8px 0 10px rgba(0,0,0,.55),
+        inset 0 -12px 18px rgba(0,0,0,.2);
+}
+
+.game-car .car-roof{
+    background:linear-gradient(90deg,#4b0008,#c80025 27%,#ff3d5b 50%,#bd001f 73%,#3a0007);
+    box-shadow:inset 0 4px 8px rgba(255,255,255,.16),0 5px 8px rgba(0,0,0,.35);
+}
+
+.game-car .car-window{
+    background:linear-gradient(135deg,#e4f8ff 0%,#6d9cab 20%,#173a49 56%,#02070a 100%);
+    box-shadow:inset 0 0 9px rgba(255,255,255,.22),0 2px 4px rgba(0,0,0,.5);
+}
+
+.game-car .car-wheel{
+    box-shadow:inset 0 0 0 5px #111,inset 0 0 0 10px #444,0 4px 6px rgba(0,0,0,.8);
+}
+
+.game-car .car-wheel::after,
+.traffic-car .car-wheel::after{
+    content:"";
+    position:absolute;
+    width:14px;
+    height:28px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:linear-gradient(90deg,#777,#ddd,#555);
+    box-shadow:inset 0 0 0 4px #333;
+}
+
+/* Extra body highlights make the CSS cars look less flat. */
+.game-car .car-body::before,
+.traffic-car .car-body::before{
+    content:"";
+    position:absolute;
+    left:12%;
+    right:12%;
+    top:9%;
+    height:5px;
+    border-radius:50%;
+    background:rgba(255,255,255,.35);
+    filter:blur(1px);
+}
+
+.game-car .car-body::after,
+.traffic-car .car-body::after{
+    content:"";
+    position:absolute;
+    left:10%;
+    right:10%;
+    bottom:7%;
+    height:7px;
+    border-radius:50%;
+    background:rgba(0,0,0,.25);
+}
+
+.traffic-car{
+    width:66px;
+    height:130px;
+    transform:scale(1.03);
+    transform-origin:center bottom;
+    filter:drop-shadow(0 15px 11px rgba(0,0,0,.72));
+}
+
+.traffic-car .car-body{
+    border:1px solid rgba(255,255,255,.45);
+    box-shadow:inset 5px 0 8px rgba(255,255,255,.16),inset -6px 0 9px rgba(0,0,0,.55);
+}
+
+.traffic-car .car-window{
+    background:linear-gradient(135deg,#d5eef5,#507584 30%,#173642 68%,#020609);
+    box-shadow:inset 0 0 8px rgba(255,255,255,.2);
+}
+
+.traffic-car .car-wheel{
+    box-shadow:inset 0 0 0 5px #101010,inset 0 0 0 10px #454545,0 4px 6px rgba(0,0,0,.8);
+}
+
+/* Small lane-change glow while the player moves. */
+.game-car.lane-moving{
+    filter:drop-shadow(0 17px 13px rgba(0,0,0,.78)) drop-shadow(0 0 8px rgba(255,255,255,.18));
+}
+
+/* Roadside visual texture. */
+#game::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+        radial-gradient(circle at 8% 74%,rgba(255,255,255,.16) 0 2px,transparent 3px),
+        radial-gradient(circle at 92% 64%,rgba(255,255,255,.12) 0 2px,transparent 3px),
+        linear-gradient(180deg,transparent 0 54%,rgba(0,0,0,.12) 75%,rgba(0,0,0,.28));
+    z-index:1;
+}
+
+.road{ z-index:4; }
+.hud,.controls,.overlay{ z-index:100; }
+
 </style>
 
 </head>
@@ -2197,10 +2354,15 @@ function movePlayer(direction){
         return;
     }
 
-    playerLane =
-        newLane;
+    playerLane = newLane;
 
+    player.classList.add("lane-moving");
     positionPlayer();
+
+    clearTimeout(window._laneMoveGlow);
+    window._laneMoveGlow = setTimeout(() => {
+        player.classList.remove("lane-moving");
+    }, 150);
 
 }
 
@@ -2211,27 +2373,19 @@ function movePlayer(direction){
 
 function laneIsDangerous(lane){
 
-    const playerTop =
-        window.innerHeight - 250;
+    const playerTop = window.innerHeight - 250;
 
-    for(
-        const car of traffic
-    ){
-
+    for(const car of traffic){
         if(
             car.lane === lane &&
-            car.y > playerTop - 170 &&
-            car.y < playerTop + 100
+            car.y > playerTop - 105 &&
+            car.y < playerTop + 90
         ){
-
             return true;
-
         }
-
     }
 
     return false;
-
 }
 
 
@@ -2448,171 +2602,49 @@ function createRoadLines(){
    CREATE TRAFFIC CAR
 ========================================================= */
 
-function createTrafficCar(
-    lane,
-    startY = -160
-){
+function createTrafficCar(lane, startY = -170){
 
-    const car =
-        document.createElement(
-            "div"
-        );
-
-    car.className =
-        "traffic-car";
-
-
-    /*
-       Different realistic-looking
-       car color combinations.
-    */
+    const car = document.createElement("div");
+    car.className = "traffic-car";
 
     const colors = [
-
-        [
-            "#061a48",
-            "#0869d2",
-            "#63baff"
-        ],
-
-        [
-            "#4a0007",
-            "#d60020",
-            "#ff5a70"
-        ],
-
-        [
-            "#403000",
-            "#d49b00",
-            "#ffe06a"
-        ],
-
-        [
-            "#061d0b",
-            "#168b2c",
-            "#69e67c"
-        ],
-
-        [
-            "#222",
-            "#777",
-            "#c6c6c6"
-        ],
-
-        [
-            "#260045",
-            "#7600d8",
-            "#d878ff"
-        ]
-
+        ["#061a48","#0869d2","#63baff"],
+        ["#4a0007","#d60020","#ff5a70"],
+        ["#403000","#d49b00","#ffe06a"],
+        ["#061d0b","#168b2c","#69e67c"],
+        ["#222","#777","#d8d8d8"],
+        ["#260045","#7600d8","#d878ff"],
+        ["#003b38","#00a88f","#67f5d8"]
     ];
 
-
-    const color =
-        colors[
-            Math.floor(
-                Math.random() *
-                colors.length
-            )
-        ];
-
+    const color = colors[Math.floor(Math.random() * colors.length)];
 
     car.innerHTML = `
-
-        <div
-            class="car-body"
-            style="
-                background:
-                linear-gradient(
-                    90deg,
-                    ${color[0]},
-                    ${color[1]} 30%,
-                    ${color[2]} 50%,
-                    ${color[1]} 70%,
-                    ${color[0]}
-                );
-            ">
-        </div>
-
-        <div
-            class="car-roof"
-            style="
-                background:
-                linear-gradient(
-                    90deg,
-                    ${color[0]},
-                    ${color[1]} 50%,
-                    ${color[0]}
-                );
-            ">
-        </div>
-
+        <div class="car-body" style="background:linear-gradient(90deg,${color[0]},${color[1]} 30%,${color[2]} 50%,${color[1]} 70%,${color[0]});"></div>
+        <div class="car-roof" style="background:linear-gradient(90deg,${color[0]},${color[1]} 50%,${color[0]});"></div>
         <div class="car-window"></div>
-
         <div class="car-bonnet"></div>
-
         <div class="car-headlight left"></div>
-
         <div class="car-headlight right"></div>
-
         <div class="car-grille"></div>
-
         <div class="car-mirror left"></div>
-
         <div class="car-mirror right"></div>
-
         <div class="car-wheel left"></div>
-
         <div class="car-wheel right"></div>
-
     `;
 
-
-    /*
-       Place car exactly
-       in selected lane.
-    */
-
-    const laneCenter =
-        road.clientWidth *
-        lanePositions[lane];
-
-    const x =
-        laneCenter -
-        33;
-
-
-    car.style.left =
-        x + "px";
-
-    car.style.top =
-        startY + "px";
-
-
-    road.appendChild(
-        car
-    );
-
+    const laneCenter = road.clientWidth * lanePositions[lane];
+    car.style.left = (laneCenter - 33) + "px";
+    car.style.top = startY + "px";
+    road.appendChild(car);
 
     traffic.push({
-
-        el:car,
-
-        lane:lane,
-
-        y:startY,
-
-        speed:
-            gameSpeed *
-            (
-                .55 +
-                Math.random() * .3
-            )
-
+        el: car,
+        lane: lane,
+        y: startY,
+        speed: gameSpeed * (.45 + Math.random() * .23)
     });
-
 }
-
 
 /* =========================================================
    SAFE TRAFFIC SPAWNING
@@ -2620,135 +2652,59 @@ function createTrafficCar(
 
 function getSafeLane(){
 
+    /* Keep traffic deliberately light: at least one lane is always open. */
+    const MAX_TRAFFIC = 2;
+    if(traffic.length >= MAX_TRAFFIC) return null;
+
     const available = [];
 
-    for(
-        let lane = 0;
-        lane < 3;
-        lane++
-    ){
+    for(let lane = 0; lane < 3; lane++){
 
         let safe = true;
 
-        for(
-            const car of traffic
-        ){
-
-            /*
-               Don't place another car
-               too close in the same lane.
-            */
-
-            if(
-                car.lane === lane &&
-                car.y < 230 &&
-                car.y > -300
-            ){
-
+        for(const car of traffic){
+            if(car.lane === lane && car.y < 470 && car.y > -500){
                 safe = false;
-
                 break;
-
             }
-
         }
 
-        if(safe)
-            available.push(lane);
-
+        if(safe) available.push(lane);
     }
 
+    if(!available.length) return null;
 
-    if(
-        available.length === 0
-    ){
+    /* Prefer lanes away from the player's current lane when possible. */
+    const preferred = available.filter(lane => lane !== playerLane);
+    const pool = preferred.length ? preferred : available;
 
-        return null;
-
-    }
-
-
-    return available[
-        Math.floor(
-            Math.random() *
-            available.length
-        )
-    ];
-
+    return pool[Math.floor(Math.random() * pool.length)];
 }
 
 
 /* =========================================================
-   START TRAFFIC
+   START TRAFFIC - LOW DENSITY / EASY LANE CHANGES
 ========================================================= */
 
 function startTraffic(){
 
-    /*
-       Initial traffic arrangement.
-       Never fill all three lanes at once.
-    */
+    setTimeout(() => {
+        if(!running) return;
 
-    setTimeout(
-        () => {
+        const lane = getSafeLane();
+        if(lane !== null) createTrafficCar(lane, -190);
+    }, 1100);
 
-            if(!running)
-                return;
+    enemyTimer = setInterval(() => {
 
-            const lane =
-                getSafeLane();
+        if(!running || paused) return;
 
-            if(
-                lane !== null
-            ){
+        const lane = getSafeLane();
+        if(lane !== null){
+            createTrafficCar(lane, -190);
+        }
 
-                createTrafficCar(
-                    lane,
-                    -180
-                );
-
-            }
-
-        },
-        700
-    );
-
-
-    enemyTimer =
-        setInterval(
-            function(){
-
-                if(
-                    !running ||
-                    paused
-                ){
-
-                    return;
-
-                }
-
-                const lane =
-                    getSafeLane();
-
-                if(
-                    lane !== null
-                ){
-
-                    createTrafficCar(
-                        lane,
-                        -170
-                    );
-
-                }
-
-            },
-            Math.max(
-                650,
-                1400 -
-                gameSpeed * 65
-            )
-        );
-
+    }, Math.max(1050, 1750 - gameSpeed * 38));
 }
 
 
@@ -2872,40 +2828,21 @@ function startCoins(){
    COLLISION
 ========================================================= */
 
-function collision(
-    object1,
-    object2
-){
+function collision(object1, object2){
 
-    const A =
-        object1.getBoundingClientRect();
+    const A = object1.getBoundingClientRect();
+    const B = object2.getBoundingClientRect();
 
-    const B =
-        object2.getBoundingClientRect();
-
-
-    /*
-       Slightly reduced collision
-       boxes make the game fair.
-    */
-
-    const padding = 10;
-
+    /* Smaller hitboxes make lane changes fair and responsive. */
+    const horizontalPadding = 15;
+    const verticalPadding = 13;
 
     return !(
-        A.right - padding <
-        B.left ||
-
-        A.left + padding >
-        B.right ||
-
-        A.bottom - padding <
-        B.top ||
-
-        A.top + padding >
-        B.bottom
+        A.right - horizontalPadding < B.left + horizontalPadding ||
+        A.left + horizontalPadding > B.right - horizontalPadding ||
+        A.bottom - verticalPadding < B.top + verticalPadding ||
+        A.top + verticalPadding > B.bottom - verticalPadding
     );
-
 }
 
 
@@ -2966,6 +2903,15 @@ function gameLoop(){
         /* -----------------------------------------------
            TRAFFIC
         ------------------------------------------------ */
+
+        /* Defensive cleanup: never allow traffic to become crowded. */
+        if(traffic.length > 2){
+            traffic.sort((a,b) => b.y - a.y);
+            while(traffic.length > 2){
+                const extra = traffic.pop();
+                extra.el.remove();
+            }
+        }
 
         for(
             let i =
@@ -3630,4 +3576,4 @@ document.addEventListener(
 </body>
 
 </html>
-```
+
